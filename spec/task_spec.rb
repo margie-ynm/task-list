@@ -1,42 +1,40 @@
-require('rspec')
-require('task')
+
+require('spec_helper')
 
 describe(Task) do
-  describe("#description") do
-    it("lets you give it a description") do
-      test_task = Task.new("scrub the zebra")
-      expect(test_task.description()).to(eq("scrub the zebra"))
-    end
-  end
   describe(".all") do
     it("is empty at first") do
-      expect(Task.all).to eq([])
+      expect(Task.all()).to(eq([]))
     end
   end
+
   describe("#save") do
     it("adds a task to the array of saved tasks") do
-      test_task = Task.new("wash the lion")
+      test_task = Task.new({:description => "learn SQL", :list_id => 1})
       test_task.save()
-      expect(Task.all).to(eq([test_task]))
+      expect(Task.all()).to(eq([test_task]))
     end
   end
-  describe(".clear") do
-    it("empties out all of the saved tasks") do
-      Task.new("wash the lion").save
-      Task.clear
-      expect(Task.all).to eq([])
+
+  describe("#description") do
+    it("lets you read the description out") do
+      test_task = Task.new({:description => "learn SQL", :list_id => 1})
+      expect(test_task.description()).to(eq("learn SQL"))
     end
   end
-  describe("#delete") do
-    it("removes the selected Task from the task list") do
-      task1 = Task.new("wash the lion")
-      task2 = Task.new("seek immediate medical attention")
-      task3 = Task.new("google 'lion rabies'")
-      task1.save
-      task2.save
-      task3.save
-      task2.delete
-      expect(Task.all).to eq([task1, task3])
+
+  describe("#list_id") do
+    it("lets you read the list ID out") do
+      test_task = Task.new({:description => "learn SQL", :list_id => 1})
+      expect(test_task.list_id()).to(eq(1))
+    end
+  end
+
+  describe("#==") do
+    it("is the same task if it has the same description and list ID") do
+      task1 = Task.new({:description => "learn SQL", :list_id => 1})
+      task2 = Task.new({:description => "learn SQL", :list_id => 1})
+      expect(task1).to(eq(task2))
     end
   end
 end
