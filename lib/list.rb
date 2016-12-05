@@ -1,5 +1,4 @@
 class List
-
   attr_reader(:name, :id)
 
   define_method(:initialize) do |attributes|
@@ -10,11 +9,11 @@ class List
   # New and improved all method
   define_singleton_method(:all) do
     # Contains all list names from lists table from DB
-    returned_lists = DB.exec("SELECT * FROM lists;")
+    db_all_lists = DB.exec("SELECT * FROM lists;")
     # Empty array to store list name(s)
     lists = []
     #loops through returned_lists
-    returned_lists.each do |list|
+    db_all_lists.each do |list|
       # Takes name from each list
         # Example: Yardwork, ID = 1
         # name = Yardwork
@@ -30,14 +29,15 @@ class List
 
   define_method(:save) do
     # Adds name to lists table, returns ID
-    result = DB.exec("INSERT INTO lists (name) VALUES ('#{@name}') RETURNING id;")
+      # Result is the row entry? So it just grabs the ID section
+    result = DB.exec("INSERT INTO lists (name) VALUES ('#{name}') RETURNING id;")
     # Gets returned ID, converts it to integer
-    @id = result.first().fetch("id").to_i()
-  end
-  #overrides the == operator
-  define_method(:==) do |another_list|
-    #compares names and ids of same class and returns true
-    self.name().==(another_list.name()).&(self.id().==(another_list.id()))
+    @id = result.first().fetch("id").to_i
   end
 
+  # Overrides the double equals operator
+  define_method(:==) do |another_list|
+    # Compares names and ids
+    self.name().==(another_list.name()).&(self.id().==(another_list.id()))
+  end
 end
